@@ -8,7 +8,7 @@ public class Main {
         OnlineBookAdapter onlineBookAdapter = new OnlineBookAdapter(onlineBooking);
 
         onlineBookAdapter.BookTicket("Avengers"); 
-        inPersonTicketAdapter.BookTicket("Nun");   
+        inPersonTicketAdapter.BookTicket("Nun");  
         overThePhoneAdapter.BookTicket("Jawan");    
     }
  }
