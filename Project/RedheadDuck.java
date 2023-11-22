@@ -1,14 +1,11 @@
-public class RedheadDuck extends Duck implements Quackable{
+public class RedheadDuck extends QuackableBeing {
     @Override
     public void quack(){
+     notifyObservers();
      System.out.println("Quack Quack from Redhead Duck!");
     } 
     @Override
-    public void display(){
-     System.out.println("looks like Readhead duck!");
-    }
-    @Override
-    public void swim(){
-     System.out.println("Readhead Duck is swimming!");
+    public void quackSound(){
+         System.out.println("Redhead Duck is sounding Quack Quack");
     }
 }

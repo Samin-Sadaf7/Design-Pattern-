@@ -1,4 +1,8 @@
-public abstract class Duck {
-        public abstract void display();
-        public abstract void swim();  
+public abstract class  Duck {
+        public  void display(){
+             System.out.println("You are seeing a duck");
+        }
+        public  void swim(){
+             System.out.println("Swimming ");
+        }  
 } 

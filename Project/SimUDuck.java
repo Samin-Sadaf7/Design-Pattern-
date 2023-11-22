@@ -1,76 +1,84 @@
-import java.util.Iterator;
-import java.util.concurrent.Flow.Publisher;
-import java.util.concurrent.Flow.Subscription;
 public class SimUDuck {
-     public static void main(String[] args) {
-
+    public static void main(String[] args) {
+        // Creating DuckFactory and CountingDuckFactory instances
         DuckFactory duckFactory = new DuckFactory();
-        Duck mallardDuck = duckFactory.createDuck("MallardDuck");
-        Duck rubberDuck = duckFactory.createDuck("RubberDuck");
-        Duck decoyDuck = duckFactory.createDuck("DecoyDuck");
-        Duck gooseAdapter = duckFactory.createDuck("Goose");
+        CountingDuckFactory countingDuckFactory = new CountingDuckFactory();
 
-        System.out.println("\n --- Ducks functionality display ----\n");
-        
+        // Creating individual ducks using DuckFactory
+        Duck mallardDuck = duckFactory.createDuck("MallardDuck");
+        Duck redheadDuck = duckFactory.createDuck("RedheadDuck");
+        Duck rubberDuck = duckFactory.createDuck("RubberDuck");
+        Duck gooseDuck = duckFactory.createDuck("Goose");
+        Duck decoyDuck = duckFactory.createDuck("DecoyDuck");
+
+        // Testing individual duck functionalities
+        System.out.println("=== Individual Ducks ===");
         mallardDuck.display();
         mallardDuck.swim();
+
+        redheadDuck.display();
+        redheadDuck.swim();
 
         rubberDuck.display();
         rubberDuck.swim();
 
+        gooseDuck.display();
+        gooseDuck.swim();
+
         decoyDuck.display();
         decoyDuck.swim();
 
-        gooseAdapter.display();
-        gooseAdapter.swim();
+        // Creating counting ducks using CountingDuckFactory
+        Quackable countedMallardDuck = countingDuckFactory.createDuck("MallardDuck");
+        Quackable countedRedheadDuck = countingDuckFactory.createDuck("RedheadDuck");
+        Quackable countedGooseDuck = countingDuckFactory.createDuck("Goose");
+        Quackable countedDecoyDuck = countingDuckFactory.createDuck("DecoyDuck");
 
-        CountingDuckFactory countingDuckFactory = new CountingDuckFactory();
-        QuackCounter quackableMallard = countingDuckFactory.createDuck("MallardDuck");
-        QuackCounter quackableRedhead = countingDuckFactory.createDuck("RedheadDuck");
-        QuackCounter quackableGoose = countingDuckFactory.createDuck("Goose");
+        System.out.println("\n=== Observing Quacks of the Ducks ===");
+        QuackObserver observer1 = new QuackObserver(countedMallardDuck);
+        QuackObserver observer2 = new QuackObserver(countedRedheadDuck);
+        System.out.println("\n=== Adding Observer ===");
+        countedMallardDuck.quack();
+        countedRedheadDuck.quack();
+        System.out.println("\n=== Removing Observer ===");
+        countedMallardDuck.removeObserver(observer1);
+        countedRedheadDuck.removeObserver(observer2);
+        countedMallardDuck.quack();
+        countedRedheadDuck.quack();
         
-        System.out.println("\n --- Counting Duck functionality display ----\n");
-        
-        quackableMallard.quack();
-        quackableMallard.quack();
-        quackableRedhead.quack();
-        quackableGoose.quack();
+        // Testing counted duck functionalities
+        System.out.println("\n=== Counted Ducks ===");
+        countedMallardDuck.quack();
+        countedMallardDuck.quack();
+        countedRedheadDuck.quack();
+        countedRedheadDuck.quack();
+        countedRedheadDuck.quack();
+        countedGooseDuck.quack();
+        countedDecoyDuck.quack();
 
-        System.out.println("\n --- Flock functionality display ----\n");
-        
-        Flock duckFlock = new Flock();
-        duckFlock.add(quackableMallard);
-        duckFlock.add(quackableRedhead);
-        duckFlock.quack();
-        
-        System.out.println("\n --- Flock in a big flock functionality display ----\n");
-        
-        Flock bigDuckFlock = new Flock();
-        bigDuckFlock.add(duckFlock);
-        bigDuckFlock.add(quackableMallard);
-        bigDuckFlock.add(quackableGoose);
-        Iterator<Quackable> iterator = bigDuckFlock.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().quack();
-        }
-        
-        System.out.println("\n---- Observer Pattern ----");
-        DuckQuackObserver observer = new DuckQuackObserver();
-        Publisher<Quackable> publisher = (subscriber) -> {
-            subscriber.onSubscribe(new Subscription() {
-                @Override
-                public void request(long n) { }
+        System.out.println("\nNumber of quacks for MallardDuck: " + ((QuackCounter) countedMallardDuck).getQuacks());
+        System.out.println("Number of quacks for RedheadDuck: " + ((QuackCounter) countedRedheadDuck).getQuacks());
+        System.out.println("Number of quacks for GooseDuck: " + ((QuackCounter) countedGooseDuck).getQuacks());
+        System.out.println("Number of quacks for DecoyDuck: " + ((QuackCounter) countedDecoyDuck).getQuacks());
 
-                @Override
-                public void cancel() {}
-            });
-            subscriber.onNext(quackableMallard);
-            subscriber.onNext(quackableGoose);
-            subscriber.onNext(quackableRedhead);
-            subscriber.onComplete();
-        };
-
-        publisher.subscribe(observer);
+        
+        // Creating Flock and adding ducks
+        Flock flock = new Flock();
+        flock.add(countedMallardDuck);
+        flock.add(countedRedheadDuck);
+        flock.add(countedGooseDuck);
+        flock.add(countedDecoyDuck);
+        Flock bigFlock = new Flock();
+        bigFlock.add(flock);
+        bigFlock.add(countedMallardDuck);
+        bigFlock.add(countedRedheadDuck);
+        bigFlock.add(countedGooseDuck);
+     
+        
+        System.out.println("\n=== Flock Quacking ===");
+        flock.quack();
+        System.out.println("\n=== Big Flock Quacking ===");
+        bigFlock.quack();
 
     }
 }
