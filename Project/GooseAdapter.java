@@ -1,5 +1,5 @@
 public class GooseAdapter extends QuackableBeing {
-    Goose goose;
+    private Goose goose;
     public GooseAdapter(Goose goose) {
         this.goose =goose;
     }
